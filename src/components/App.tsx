@@ -1,28 +1,41 @@
 import React from 'react';
-import { Login } from './authentication/Login';
+import { Login } from './pages/Login';
 import { Switch, Route, useHistory } from "react-router-dom";
 import { useEffect } from 'react';
 import { loginUser } from '../api/auth';
-import { saveLoginInformation } from '../slices/userSlice';
-import { useAppDispatch } from '../hooks';
+import { saveIncommingAddress, saveLoginInformation, userIsLogged } from '../slices/userSlice';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { AppHeader } from './menu/AppHeader';
+import { PAGE } from '../utils/constants';
+import { pageItems } from './pages/pages';
 
 export default function App() {
   const history = useHistory();
   const dispatch = useAppDispatch();
+  const isLogged = useAppSelector(userIsLogged);
 
   useEffect(() => {
     loginUser().then(res => {
       dispatch(saveLoginInformation(res));
     })
     .catch(error => {
-      history.push('/login');
+      dispatch(saveIncommingAddress(history.location.pathname));
+      history.push(PAGE.LOGIN);
     });
   }, [history, dispatch]);
 
   return (
     <Switch>
-      <Route path={'/login'} exact render={() => <Login/>}/>
-      <Route path={'/'} exact render={() => <div>homescreen</div>}/>
+      {isLogged && pageItems.map((item, index) =>
+        item.showInSwitch && (
+          <Route key={index} path={item.link} exact render={() => 
+            <>
+              <AppHeader/>
+              {item.render}
+            </>
+          }/>
+      ))}
+      <Route path={PAGE.LOGIN} exact render={() => <Login/>}/>
     </Switch>
   );
 }

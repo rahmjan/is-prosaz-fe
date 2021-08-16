@@ -12,6 +12,7 @@ interface CurrentUserStateI {
   roles: ROLE[],
   authToken: string,
   isLogged: boolean,
+  incommingAdress: string,
 }
 
 const initialState = { 
@@ -20,6 +21,7 @@ const initialState = {
   roles: [],
   authToken: '',
   isLogged: false,
+  incommingAdress: '',
 } as CurrentUserStateI
 
 export interface LoginParamsI {
@@ -42,13 +44,18 @@ const slice = createSlice({
       state.id = action.payload.id;
       state.roles = action.payload.roles;
       state.isLogged = true;
-    }
+    },
+    saveIncommingAddress(state, action: PayloadAction<string>) {
+      state.incommingAdress = action.payload;
+    },
   },
 })
 
-export const { createAuthToken, saveLoginInformation } = slice.actions;
+export const { createAuthToken, saveLoginInformation, saveIncommingAddress } = slice.actions;
 
 export const currentUserAuthToken = (state: RootState) => state.currentUser.authToken;
 export const currentUserName = (state: RootState) => state.currentUser.name;
+export const userIsLogged = (state: RootState) => state.currentUser.isLogged;
+export const incommingAddress = (state: RootState) => state.currentUser.incommingAdress;
 
 export default slice.reducer;

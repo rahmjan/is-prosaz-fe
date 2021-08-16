@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Box, Button, Container, makeStyles, TextField } from "@material-ui/core";
+import { Box, Button, Container, makeStyles, TextField, Typography } from "@material-ui/core";
 import backgroundImage from "../../assets/loginBackground.png";
-import { useAppDispatch } from "../../hooks";
-import { createAuthToken, saveLoginInformation } from "../../slices/userSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { createAuthToken, incommingAddress, saveLoginInformation } from "../../slices/userSlice";
 import { loginUser } from "../../api/auth";
 import { useHistory } from "react-router-dom";
+import { PAGE } from "../../utils/constants";
 
 const useStyle = makeStyles({
   loginForm: {
@@ -29,6 +30,7 @@ export function Login() {
   const history = useHistory();
   const classes = useStyle();
   const dispatch = useAppDispatch();
+  const inAddress = useAppSelector(incommingAddress);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -37,7 +39,7 @@ export function Login() {
     dispatch(createAuthToken({username, password}));
     loginUser().then(res => {
       dispatch(saveLoginInformation(res));
-      history.push('/');
+      inAddress === PAGE.LOGIN ? history.push(PAGE.HOME) : history.push(inAddress);
     });
   }
 
@@ -53,7 +55,7 @@ export function Login() {
     <Box className={classes.screen}>
       <Container>
         <form className={classes.loginForm} onSubmit={handleSubmit}>
-          <h1 style={{alignSelf: 'center'}}>Login Screen</h1>
+          <Typography variant="h4" noWrap color="primary" style={{alignSelf: 'center'}}>Login Screen</Typography>
 
           Uživatelské jméno
           <TextField variant="outlined" required onChange={onChangeUserName}/>
