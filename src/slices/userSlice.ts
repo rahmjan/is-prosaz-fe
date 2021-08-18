@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { ROLE } from '../utils/types'
 import bcrypt from 'bcryptjs'
 import base64 from 'base-64'
 import { ShortUserDto } from '../api/auth'
-import { AUTH_TOKEN } from '../utils/constants'
+import { AUTH_TOKEN, ROLE } from '../utils/constants'
 
 interface CurrentUserStateI {
   id: number,
@@ -18,7 +17,7 @@ interface CurrentUserStateI {
 const initialState = { 
   id: -1, 
   name: 'unknown',
-  roles: [],
+  roles: ["NONE"],
   authToken: '',
   isLogged: false,
   incommingAdress: '',
@@ -55,7 +54,8 @@ export const { createAuthToken, saveLoginInformation, saveIncommingAddress } = s
 
 export const currentUserAuthToken = (state: RootState) => state.currentUser.authToken;
 export const currentUserName = (state: RootState) => state.currentUser.name;
-export const userIsLogged = (state: RootState) => state.currentUser.isLogged;
+export const currentUserRoles = (state: RootState) => state.currentUser.roles;
+export const currentUserIsLogged = (state: RootState) => state.currentUser.isLogged;
 export const incommingAddress = (state: RootState) => state.currentUser.incommingAdress;
 
 export default slice.reducer;

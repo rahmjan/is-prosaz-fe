@@ -8,6 +8,10 @@ import { useHistory } from "react-router-dom";
 import { PAGE } from "../../utils/constants";
 
 const useStyle = makeStyles({
+  screen: {
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundRepeat: 'no-repeat',
+  },
   loginForm: {
     margin: 'auto',
     maxWidth: '450px',
@@ -16,13 +20,13 @@ const useStyle = makeStyles({
     flexDirection: 'column',
     justifyContent: "center",
   },
-  screen: {
-    backgroundImage: `url(${backgroundImage})`,
-    backgroundRepeat: 'no-repeat',
-  },
   buttons: {
     display: 'flex',
     justifyContent: "space-between",
+  },
+  text: {
+    paddingLeft: "25px",
+    margin: "3px",
   }
 });
 
@@ -55,18 +59,20 @@ export function Login() {
     <Box className={classes.screen}>
       <Container>
         <form className={classes.loginForm} onSubmit={handleSubmit}>
-          <Typography variant="h4" noWrap color="primary" style={{alignSelf: 'center'}}>Login Screen</Typography>
+          <Typography variant="h4" noWrap color="primary" style={{alignSelf: 'center'}}>IS Prosaz</Typography>
+          <div style={{height: "3vh"}}/>
 
-          Uživatelské jméno
+          <Typography className={classes.text} variant="body1" noWrap color="primary">Uživatelské jméno</Typography>
           <TextField variant="outlined" required onChange={onChangeUserName}/>
-          Heslo
+          <div style={{height: "1vh"}}/>
+
+          <Typography className={classes.text} variant="body1" noWrap color="primary">Heslo</Typography>
           <TextField variant="outlined" type="password" required onChange={onChangePassword}/>
+          <div style={{height: "3vh"}}/>
 
           <Box className={classes.buttons}>
-            Zapomněli jste heslo?
-            <Button variant="contained" color="primary" type="submit">
-              Přihlásit
-            </Button>
+            <Typography className={classes.text} variant="body1" noWrap color="primary">Zapomněli jste heslo?</Typography>
+            <Button size="large" variant="contained" color="primary" type="submit">Přihlásit</Button>
           </Box>
         </form>
       </Container>

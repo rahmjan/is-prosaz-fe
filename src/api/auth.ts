@@ -1,4 +1,4 @@
-import { ROLE } from "../utils/types";
+import { ROLE } from "../utils/constants";
 import { getRequest } from "./api";
 
 export interface ShortUserDto {

@@ -6,13 +6,17 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { BrowserRouter } from 'react-router-dom';
+import { theme } from './theme/theme';
+import { ThemeProvider } from '@material-ui/core';
 
 ReactDOM.render(
   <React.StrictMode>
-    <CssBaseline/>
     <BrowserRouter>
       <Provider store={store}>
-        <App/>
+        <ThemeProvider theme={theme}>
+          <CssBaseline/>
+          <App/>
+        </ThemeProvider>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>,

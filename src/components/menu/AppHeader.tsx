@@ -30,6 +30,7 @@ export function AppHeader() {
   };
 
   const handleMenuClose = () => {
+    console.log("closeeeeeee")
     setOpen(false);
   };
 

@@ -1,18 +1,16 @@
 import React from 'react';
-import { Login } from './pages/Login';
-import { Switch, Route, useHistory } from "react-router-dom";
+import { Switch, useHistory } from "react-router-dom";
 import { useEffect } from 'react';
 import { loginUser } from '../api/auth';
-import { saveIncommingAddress, saveLoginInformation, userIsLogged } from '../slices/userSlice';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { AppHeader } from './menu/AppHeader';
+import { saveIncommingAddress, saveLoginInformation } from '../slices/userSlice';
+import { useAppDispatch } from '../hooks';
 import { PAGE } from '../utils/constants';
 import { pageItems } from './pages/pages';
+import { ProtectedRoute } from './common/ProtectedRoute';
 
 export default function App() {
   const history = useHistory();
   const dispatch = useAppDispatch();
-  const isLogged = useAppSelector(userIsLogged);
 
   useEffect(() => {
     loginUser().then(res => {
@@ -26,16 +24,9 @@ export default function App() {
 
   return (
     <Switch>
-      {isLogged && pageItems.map((item, index) =>
-        item.showInSwitch && (
-          <Route key={index} path={item.link} exact render={() => 
-            <>
-              <AppHeader/>
-              {item.render}
-            </>
-          }/>
-      ))}
-      <Route path={PAGE.LOGIN} exact render={() => <Login/>}/>
+      {pageItems.map((item, index) => 
+        <ProtectedRoute exact key={index} path={item.link} role={item.hasRole} render={item.render}/>
+      )}
     </Switch>
   );
 }

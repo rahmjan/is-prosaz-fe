@@ -1,4 +1,5 @@
-import { PAGE } from "../../utils/constants";
+import { PAGE, ROLE } from "../../utils/constants";
+import { AppHeader } from "../menu/AppHeader";
 import { Login } from "./Login";
 
 interface PageItemI {
@@ -8,9 +9,9 @@ interface PageItemI {
 
     // Switch
     render: object,
-    showInSwitch: boolean,
 
     // Both
+    hasRole: ROLE,
     link: string,
   }  
 
@@ -18,64 +19,64 @@ export const pageItems: PageItemI[] = [
   {
     label: "Home",
     showInMenu: false,
-    render: <div>homescreen</div>,
-    showInSwitch: true,
+    render: <AppHeader/>,
+    hasRole: "CARETAKER",
     link: PAGE.HOME,
   },
   {
     label: "Login",
     showInMenu: false,
     render: <Login/>,
-    showInSwitch: false,
+    hasRole: "NONE",
     link: PAGE.LOGIN,
   },
   {
     label: "Klienti",
     showInMenu: true,
-    render: <div/>,
-    showInSwitch: true,
+    render: <div>homescreen2</div>,
+    hasRole: "CARETAKER",
     link: PAGE.CLIENTS,
   },
   {
     label: "Pečovatelé",
     showInMenu: true,
     render: <div/>,
-    showInSwitch: true,
+    hasRole: "CARETAKER",
     link: PAGE.CARETAKERS,
   },
   {
     label: "Uživatelé",
     showInMenu: true,
     render: <div/>,
-    showInSwitch: true,
+    hasRole: "CARETAKER",
     link: PAGE.USERS,
   },
   {
     label: "Požadavky",
     showInMenu: true,
     render: <div/>,
-    showInSwitch: true,
+    hasRole: "CARETAKER",
     link: PAGE.REQUESTS,
   },
   {
     label: "Denní plán",
     showInMenu: true,
     render: <div/>,
-    showInSwitch: true,
+    hasRole: "CARETAKER",
     link: PAGE.DAILYPLAN,
   },
   {
     label: "Měsíční plán",
     showInMenu: true,
     render: <div/>,
-    showInSwitch: true,
+    hasRole: "CARETAKER",
     link: PAGE.MONTHLYPLAN,
   },
   {
     label: "Agenda",
     showInMenu: true,
     render: <div/>,
-    showInSwitch: true,
+    hasRole: "CARETAKER",
     link: PAGE.AGENDA,
   },
 ];

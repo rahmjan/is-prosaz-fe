@@ -2,7 +2,7 @@ import React from "react";
 import { Drawer, IconButton, List, ListItem, ListItemText, makeStyles } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 import { Link } from "react-router-dom";
-import { PRIMARY_COLOR } from "../../utils/constants";
+import { PRIMARY_COLOR, WHITE_COLOR } from "../../utils/constants";
 import Logo from "../../assets/logo.png";
 import { pageItems } from "../pages/pages";
 
@@ -20,6 +20,9 @@ const useStyle = makeStyles({
   closeButton: {
     alignSelf: "flex-end",
   },
+  list: {
+    color: WHITE_COLOR,
+  },
 });
 
 export function AppMenu(props: AppMenuPropsI) {
@@ -36,7 +39,7 @@ export function AppMenu(props: AppMenuPropsI) {
         <CloseIcon/>
       </IconButton>
       <img src={Logo} alt="logo"/>
-      <List>
+      <List className={classes.list}>
         {pageItems.map((item, index) => 
           item.showInMenu &&
             <ListItem button key={index} component={Link} to={item.link}>

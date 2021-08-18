@@ -1,2 +1,0 @@
-
-export type ROLE = "ADMIN" | "CARETAKER" | "COORDINATOR" | "SHIFT_LEADER";
