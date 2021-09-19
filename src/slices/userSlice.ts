@@ -2,12 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
 import bcrypt from 'bcryptjs'
 import base64 from 'base-64'
-import { ShortUserDto } from '../api/auth'
 import { AUTH_TOKEN, ROLE } from '../utils/constants'
+import { UserDto } from '../api/users'
 
 interface CurrentUserStateI {
   id: number,
-  name: string,
+  fullName: string,
   roles: ROLE[],
   authToken: string,
   isLogged: boolean,
@@ -16,10 +16,9 @@ interface CurrentUserStateI {
 
 const initialState = { 
   id: -1, 
-  name: 'unknown',
+  fullName: 'unknown',
   roles: ["NONE"],
   authToken: '',
-  isLogged: false,
   incommingAdress: '',
 } as CurrentUserStateI
 
@@ -39,21 +38,25 @@ const slice = createSlice({
       state.authToken = base64.encode(username + ':' + hash);
       sessionStorage.setItem(AUTH_TOKEN, state.authToken);
     },
-    saveLoginInformation(state, action: PayloadAction<ShortUserDto>) {
-      state.id = action.payload.id;
-      state.roles = action.payload.roles;
-      state.isLogged = true;
-    },
     saveIncommingAddress(state, action: PayloadAction<string>) {
       state.incommingAdress = action.payload;
+    },
+    saveLoginUser(state, action: PayloadAction<UserDto>) {
+      state.fullName = action.payload.name + " " + action.payload.surname;
+      state.id = action.payload.id;
+      state.roles = action.payload.roles;
     },
   },
 })
 
-export const { createAuthToken, saveLoginInformation, saveIncommingAddress } = slice.actions;
+export const { 
+  createAuthToken, 
+  saveIncommingAddress,
+  saveLoginUser,
+} = slice.actions;
 
 export const currentUserAuthToken = (state: RootState) => state.currentUser.authToken;
-export const currentUserName = (state: RootState) => state.currentUser.name;
+export const currentUserFullName = (state: RootState) => state.currentUser.fullName;
 export const currentUserRoles = (state: RootState) => state.currentUser.roles;
 export const currentUserIsLogged = (state: RootState) => state.currentUser.isLogged;
 export const incommingAddress = (state: RootState) => state.currentUser.incommingAdress;

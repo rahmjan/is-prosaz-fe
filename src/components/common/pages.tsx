@@ -1,6 +1,7 @@
 import { PAGE, ROLE } from "../../utils/constants";
-import { AppHeader } from "../menu/AppHeader";
-import { Login } from "./Login";
+import { Clients } from "../pages/Clients";
+import { Home } from "../pages/Home";
+import { Login } from "../pages/Login";
 
 interface PageItemI {
     // Menu
@@ -19,7 +20,7 @@ export const pageItems: PageItemI[] = [
   {
     label: "Home",
     showInMenu: false,
-    render: <AppHeader/>,
+    render: <Home/>,
     hasRole: "CARETAKER",
     link: PAGE.HOME,
   },
@@ -33,7 +34,7 @@ export const pageItems: PageItemI[] = [
   {
     label: "Klienti",
     showInMenu: true,
-    render: <div>homescreen2</div>,
+    render: <Clients/>,
     hasRole: "CARETAKER",
     link: PAGE.CLIENTS,
   },
@@ -52,7 +53,7 @@ export const pageItems: PageItemI[] = [
     link: PAGE.USERS,
   },
   {
-    label: "Požadavky",
+    label: "Požadavky klientů",
     showInMenu: true,
     render: <div/>,
     hasRole: "CARETAKER",

@@ -8,7 +8,7 @@ const useStyle = makeStyles({
   },
 });
 
-export function Login() {
+export function Home() {
   const classes = useStyle();
 
   return (

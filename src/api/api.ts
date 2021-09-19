@@ -19,7 +19,7 @@ export async function getRequest<T>(
     return data;
 
   } catch (error) { 
-    console.log('Error from reading: ' + path + ', ' + error);
+    console.error('Error from reading: ' + path + ', ' + error);
     throw error;
   }
 }

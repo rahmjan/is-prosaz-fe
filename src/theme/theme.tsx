@@ -18,7 +18,15 @@ export const theme = createTheme({
     MuiButton: {
       root: {
         borderRadius: "10px",
-      }
+      },
+    },
+    MuiTableCell: {
+      head: {
+        paddingLeft: "5px !important",
+        color: PRIMARY_COLOR,
+        fontWeight: "bolder",
+        borderBottomColor: PRIMARY_COLOR,
+      },
     },
   },
 });

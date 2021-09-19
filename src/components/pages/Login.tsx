@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Box, Button, Container, makeStyles, TextField, Typography } from "@material-ui/core";
 import backgroundImage from "../../assets/loginBackground.png";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { createAuthToken, incommingAddress, saveLoginInformation } from "../../slices/userSlice";
+import { createAuthToken, incommingAddress, saveLoginUser } from "../../slices/userSlice";
 import { loginUser } from "../../api/auth";
 import { useHistory } from "react-router-dom";
 import { PAGE } from "../../utils/constants";
+import { findUser } from "../../api/users";
 
 const useStyle = makeStyles({
   screen: {
@@ -42,8 +43,10 @@ export function Login() {
     event.preventDefault();
     dispatch(createAuthToken({username, password}));
     loginUser().then(res => {
-      dispatch(saveLoginInformation(res));
-      inAddress === PAGE.LOGIN ? history.push(PAGE.HOME) : history.push(inAddress);
+      findUser(res.id).then(res => {
+        dispatch(saveLoginUser(res));
+        inAddress === PAGE.LOGIN ? history.push(PAGE.HOME) : history.push(inAddress);
+      })
     });
   }
 
