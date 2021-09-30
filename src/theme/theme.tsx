@@ -1,9 +1,12 @@
 import { createTheme } from "@material-ui/core";
-import { PRIMARY_COLOR } from "../utils/constants";
+import { GREY_COLOR, PRIMARY_COLOR } from "../utils/constants";
 
 export const theme = createTheme({
   palette: {
     primary: {main: PRIMARY_COLOR},
+    text: {
+      primary: GREY_COLOR,
+    },
   },
   overrides: {
     MuiOutlinedInput: {
