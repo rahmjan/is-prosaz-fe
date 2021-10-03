@@ -2,7 +2,8 @@ import axios from "axios";
 import { BE_URL, AUTH_TOKEN } from "../utils/constants";
 
 export async function getRequest<T>(
-  path: string
+  path: string,
+  params?: Object,
 ) : Promise<T> 
 {
   try {
@@ -11,7 +12,8 @@ export async function getRequest<T>(
     const config = {
       headers: {
         Authorization: `Basic ${authToken}`,
-      }
+      },
+      params,
     };
 
     const data = (await axios.get<T>(BE_URL + path, config)).data;

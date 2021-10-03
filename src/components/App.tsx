@@ -28,7 +28,7 @@ export default function App() {
   return (
     <Switch>
       {pageItems.map((item, index) => 
-        <ProtectedRoute exact key={index} path={item.link} role={item.hasRole} render={item.render}/>
+        <ProtectedRoute exact key={index} path={item.link} roles={item.hasRole} render={item.render}/>
       )}
     </Switch>
   );

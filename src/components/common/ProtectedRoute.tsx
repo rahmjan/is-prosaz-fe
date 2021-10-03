@@ -8,14 +8,18 @@ interface ProtectedRoutePropsI {
   exact: boolean,
   key?: number,
   path: string,
-  role: ROLE,
+  roles: ROLE[],
   render: object,
 }
 
 export function ProtectedRoute(params: ProtectedRoutePropsI) {
   const roles = useAppSelector(currentUserRoles);
 
-  if (roles.includes(params.role)) {
+  function hasRole(element: ROLE, index: number, array: ROLE[]) { 
+    return roles.includes(element);
+  } 
+
+  if (params.roles.some(hasRole)) {
     return (
       <Route key={params.key} path={params.path} exact={params.exact} render={() => params.render}/>
     )
