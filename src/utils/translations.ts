@@ -1,4 +1,3 @@
-import { DEFAULT_ECDH_CURVE } from "tls";
 import { ROLE } from "./constants";
 
 export function roleToText(role: ROLE): string {

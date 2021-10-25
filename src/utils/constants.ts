@@ -5,12 +5,12 @@ export const PRIMARY_COLOR: string = "#1d235c"; // blue
 export const GREY_COLOR: string = "#757575";
 export const WHITE_COLOR: string = "#fafafa";
 
-export type ROLE = "ADMIN" | "CARETAKER" | "COORDINATOR" | "SHIFT_LEADER" | "NONE";
+export type ROLE = "ADMIN" | "COORDINATOR" | "SHIFT_LEADER" | "CARETAKER" | "NONE";
 
 export enum PAGE {
     HOME = "/",
     LOGIN = "/login",
-    CLIENTS = "/clients",
+    CLIENTS = "/clients", 
     CARETAKERS = "/caretakers",
     USERS = "/users",
     REQUESTS = "/requests",
@@ -18,3 +18,6 @@ export enum PAGE {
     MONTHLYPLAN = "/monthlyplan",
     AGENDA = "/agenda",
 }
+
+export type EmploymentType = "PLNY" | "POLOVICNI" | "TRICTYRY" | "JEDNACTYRI" | "DPP" | "DPC";
+export type Gender = "MALE" | "FEMALE";

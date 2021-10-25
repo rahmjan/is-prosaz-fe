@@ -1,6 +1,7 @@
 import { PAGE, ROLE } from "../../utils/constants";
 import { Clients } from "../pages/Clients";
 import { Requests } from "../pages/Requests";
+import { Dailyplan } from "../pages/Dailyplan";
 import { Home } from "../pages/Home";
 import { Login } from "../pages/Login";
 
@@ -13,72 +14,72 @@ interface PageItemI {
     render: object,
 
     // Both
-    hasRole: ROLE,
+    hasRole: ROLE[],
     link: string,
   }  
 
 export const pageItems: PageItemI[] = [
   {
-    label: "Home",
+    label: "Home", // ToDo... delete this
     showInMenu: false,
     render: <Home/>,
-    hasRole: "CARETAKER",
+    hasRole: ["CARETAKER"],
     link: PAGE.HOME,
   },
   {
     label: "Login",
     showInMenu: false,
     render: <Login/>,
-    hasRole: "NONE",
+    hasRole: ["NONE"],
     link: PAGE.LOGIN,
   },
   {
     label: "Klienti",
     showInMenu: true,
     render: <Clients/>,
-    hasRole: "CARETAKER",
+    hasRole: ["ADMIN", "COORDINATOR"],
     link: PAGE.CLIENTS,
   },
   {
     label: "Pečovatelé",
     showInMenu: true,
     render: <div/>,
-    hasRole: "CARETAKER",
+    hasRole: ["ADMIN", "COORDINATOR", "SHIFT_LEADER"],
     link: PAGE.CARETAKERS,
   },
   {
     label: "Uživatelé",
     showInMenu: true,
     render: <div/>,
-    hasRole: "CARETAKER",
+    hasRole: ["ADMIN"],
     link: PAGE.USERS,
   },
   {
     label: "Požadavky klientů",
     showInMenu: true,
     render: <Requests/>,
-    hasRole: "CARETAKER",
+    hasRole: ["ADMIN", "COORDINATOR"],
     link: PAGE.REQUESTS,
   },
   {
     label: "Denní plán",
     showInMenu: true,
-    render: <div/>,
-    hasRole: "CARETAKER",
+    render: <Dailyplan/>,
+    hasRole: ["ADMIN", "COORDINATOR"],
     link: PAGE.DAILYPLAN,
   },
   {
     label: "Měsíční plán",
     showInMenu: true,
     render: <div/>,
-    hasRole: "CARETAKER",
+    hasRole: ["ADMIN", "COORDINATOR"],
     link: PAGE.MONTHLYPLAN,
   },
   {
     label: "Agenda",
     showInMenu: true,
     render: <div/>,
-    hasRole: "CARETAKER",
+    hasRole: ["SHIFT_LEADER", "CARETAKER"],
     link: PAGE.AGENDA,
   },
 ];
