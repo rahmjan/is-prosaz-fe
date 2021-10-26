@@ -1,4 +1,5 @@
 import { Button, Grid, MenuItem, TextField, Typography } from "@material-ui/core";
+import { RepetitionForm } from "./RepetitionForm";
 
 
 export function RequestForm() {
@@ -10,6 +11,10 @@ export function RequestForm() {
 
       <Grid item>
         <TextField label="Aktivita" id="activity" fullWidth />
+      </Grid>
+
+      <Grid item>
+        <TextField label="Poznámka" id="note" fullWidth />
       </Grid>
 
       <Grid item>
@@ -49,10 +54,6 @@ export function RequestForm() {
       </Grid>
 
       <Grid item>
-        <TextField label="Poznámka" id="note" fullWidth />
-      </Grid>
-
-      <Grid item>
         <Grid container spacing={1}>
           <Grid item xs={6}>
             <TextField label="Počet pečovatelů" id="caretaker-count" type="number" fullWidth />
@@ -87,6 +88,11 @@ export function RequestForm() {
             <TextField label="PSČ" id="start-postal-code" fullWidth />
           </Grid>
         </Grid>
+      </Grid>
+
+      <Typography variant="overline">Opakování</Typography>
+      <Grid item>
+        <RepetitionForm />
       </Grid>
 
       <Grid item>

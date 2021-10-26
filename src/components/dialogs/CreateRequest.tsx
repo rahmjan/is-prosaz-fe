@@ -8,7 +8,7 @@ type CreateRequestProps = {
 
 export function CreateRequest({ open, onClose }: CreateRequestProps) {
   return (
-    <Dialog maxWidth="sm" fullWidth open={open} onClose={onClose}>
+    <Dialog maxWidth="md" fullWidth open={open} onClose={onClose}>
       <DialogTitle>Nový požadavek</DialogTitle>
       <DialogContent>
         <RequestForm />
