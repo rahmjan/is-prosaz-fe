@@ -3,6 +3,7 @@ import { Clients } from "../pages/Clients";
 import { Dailyplan } from "../pages/Dailyplan";
 import { Home } from "../pages/Home";
 import { Login } from "../pages/Login";
+import { Tasks } from "../pages/Tasks";
 
 interface PageItemI {
     // Menu
@@ -59,6 +60,13 @@ export const pageItems: PageItemI[] = [
     render: <div/>,
     hasRole: ["ADMIN", "COORDINATOR"],
     link: PAGE.REQUESTS,
+  },
+  {
+    label: "Seznam úkolů",
+    showInMenu: true,
+    render: <Tasks/>,
+    hasRole: ["ADMIN", "COORDINATOR"],
+    link: PAGE.TASKS,
   },
   {
     label: "Denní plán",
