@@ -1,12 +1,11 @@
 import { getRequest } from "./api";
 
-export interface RequestDto {
-  id: number,
+interface RequestDtoBase {
   activity?: string,
   client?: number,
-  duration?: Date,
-  earliestStart?: Date,
-  latestEnd?: Date,
+  duration?: string,
+  earliestStart?: string,
+  latestEnd?: string,
   startPlace?: number,
   endPlace?: number,
   note?: string,
@@ -14,6 +13,13 @@ export interface RequestDto {
   requiredGender?: string,
   territory?: string
 }
+
+export interface RequestDto extends RequestDtoBase {
+  id: number
+}
+
+export interface CreateRequestDto extends RequestDtoBase { }
+
 
 export function getRequests() {
   return getRequest<RequestDto[]>('/request');
