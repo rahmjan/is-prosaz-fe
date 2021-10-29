@@ -11,12 +11,19 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.4",
+<<<<<<< HEAD
     "@types/react": "^17.0.33",
+=======
+    "@types/react": "^17.0.31",
+>>>>>>> 36165475bf1535d15dede30c620c3248fb08d3e7
     "@types/react-dom": "^17.0.10",
     "axios": "^0.23.0",
     "base-64": "^1.0.0",
     "bcryptjs": "^2.4.3",
+<<<<<<< HEAD
     "devextreme": "^21.1.6",
+=======
+>>>>>>> 36165475bf1535d15dede30c620c3248fb08d3e7
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-big-calendar": "^0.38.0",
