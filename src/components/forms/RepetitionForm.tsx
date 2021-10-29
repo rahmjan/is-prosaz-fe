@@ -17,6 +17,18 @@ const useStyles = makeStyles((theme) => ({
 
 const dateString = (date: Date) => date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
+const dayToString = (day: string) => {
+  switch (day) {
+    case "MONDAY": return "Pondělí"
+    case "TUESDAY": return "Úterý"
+    case "WEDNESDAY": return "Středa"
+    case "THURSDAY": return "Čtvrtek"
+    case "FRIDAY": return "Pátek"
+    case "SATURDAY": return "Sobota"
+    case "SUNDAY": return "Neděle"
+  }
+}
+
 export function RepetitionForm() {
   const [repetitions, setRepetitions] = useState<RepetitionDto[]>([])
   const classes = useStyles();
@@ -60,18 +72,26 @@ export function RepetitionForm() {
           />
         </Grid>
 
-        <Grid item xs={1}>
-          <TextField id="start-hour" label="hh" placeholder="hh" fullWidth />
-        </Grid>
-        <Grid item xs={1}>
-          <TextField id="start-minute" label="mm" placeholder="mm" fullWidth />
+        <Grid item container xs={1} spacing={1}>
+          <Grid item xs>
+            <TextField id="start-hour" label="hh" placeholder="hh" fullWidth />
+          </Grid>
+          <Grid item xs>
+            <TextField id="start-minute" label="mm" placeholder="mm" fullWidth />
+          </Grid>
         </Grid>
 
-        <Grid item xs={1}>
-          <TextField id="end-hour" label="hh" placeholder="hh" fullWidth />
+        <Grid item container xs={1} spacing={1}>
+          <Grid item xs>
+            <TextField id="end-hour" label="hh" placeholder="hh" fullWidth />
+          </Grid>
+          <Grid item xs>
+            <TextField id="end-minute" label="mm" placeholder="mm" fullWidth />
+          </Grid>
         </Grid>
-        <Grid item xs={1}>
-          <TextField id="end-minute" label="mm" placeholder="mm" fullWidth />
+
+        <Grid item xs={2}>
+          <TextField id="weeks-repetition" label="Týdenní opakování" fullWidth />
         </Grid>
 
         <Grid item xs={2}>
@@ -100,6 +120,7 @@ function RepetitionTable({ repetitions, onDelete }: { repetitions: RepetitionDto
             <TableCell>Začátek</TableCell>
             <TableCell>Konec</TableCell>
             <TableCell>První událost</TableCell>
+            <TableCell>Týdenní opakování</TableCell>
             <TableCell>Ve svátek</TableCell>
             <TableCell />
           </TableRow>
@@ -107,10 +128,11 @@ function RepetitionTable({ repetitions, onDelete }: { repetitions: RepetitionDto
         <TableBody>
           {repetitions.map((r, index) =>
             <TableRow key={index}>
-              <TableCell>{r.dayOfWeek}</TableCell>
+              <TableCell>{dayToString(r.dayOfWeek)}</TableCell>
               <TableCell>{r.start}</TableCell>
               <TableCell>{r.finish}</TableCell>
               <TableCell>{dateString(r.firstDate)}</TableCell>
+              <TableCell>{r.weeksRepetition}</TableCell>
               <TableCell><Checkbox checked={r.influencedByHoliday} /></TableCell>
               <TableCell align="right">
                 <IconButton onClick={() => onDelete(r)}>
