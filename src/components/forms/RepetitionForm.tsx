@@ -1,8 +1,8 @@
 import { Checkbox, FormControlLabel, Grid, IconButton, makeStyles, MenuItem, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useState } from "react";
-import { RepetitionDto } from "../../api/tasks";
+import { Controller, ControllerRenderProps, SubmitHandler, useForm } from "react-hook-form";
+import { CreateRepetitionDto, DayOfWeek } from "../../api/requests";
 
 const useStyles = makeStyles((theme) => ({
   // container: {
@@ -29,88 +29,141 @@ const dayToString = (day: string) => {
   }
 }
 
-export function RepetitionForm() {
-  const [repetitions, setRepetitions] = useState<RepetitionDto[]>([])
+interface IFormInput {
+  dayOfWeek: DayOfWeek,
+  firstDate: string,
+  start: ITime,
+  finish: ITime,
+  influencedByHoliday: boolean,
+  weeksRepetition: string
+}
+
+interface ITime {
+  hours: string;
+  minutes: string;
+}
+
+const mapToRepetitionDto = (input: IFormInput): CreateRepetitionDto => {
+  return {
+    dayOfWeek: input.dayOfWeek,
+    firstDate: new Date(input.firstDate),
+    influencedByHoliday: !!input.influencedByHoliday,
+    weeksRepetition: Number(input.weeksRepetition),
+    start: `${input.start.hours}:${input.start.minutes}:00`,
+    finish: `${input.finish.hours}:${input.finish.minutes}:00`
+  }
+}
+
+export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: CreateRepetitionDto): void }) {
+  const { control, handleSubmit } = useForm<IFormInput>();
+
+  const onSubmitForm: SubmitHandler<IFormInput> = data => {
+    const dto = mapToRepetitionDto(data);
+
+    console.log("form data", data);
+    console.log("DTO", dto);
+
+    onSubmit(dto);
+  };
+
   const classes = useStyles();
 
-  const addRepetition = () => setRepetitions([...repetitions, {
-    dayOfWeek: "MONDAY",
-    finish: "12:00",
-    start: "11:00",
-    firstDate: new Date(),
-    influencedByHoliday: true,
-    weeksRepetition: 1
-  }]);
-
-  const deleteRepetition = (repetition: RepetitionDto) => setRepetitions(repetitions.filter(r => r !== repetition));
-
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmitForm)}>
       <Grid container spacing={1}>
         <Grid item xs={3}>
-          <TextField id="weekday" label="Den v týdnu" select fullWidth>
-            <MenuItem value="MONDAY">Pondělí</MenuItem>
-            <MenuItem value="TUESDAY">Úterý</MenuItem>
-            <MenuItem value="WEDNESDAY">Středa</MenuItem>
-            <MenuItem value="THURSDAY">Čtvrtek</MenuItem>
-            <MenuItem value="FRIDAY">Pátek</MenuItem>
-            <MenuItem value="SATURDAY">Sobota</MenuItem>
-            <MenuItem value="SUNDAY">Neděle</MenuItem>
-          </TextField>
+          <Controller
+            name="dayOfWeek"
+            defaultValue=""
+            control={control}
+            render={({ field }) => <DayOfWeekSelect field={field} />}
+          />
         </Grid>
 
         <Grid item xs={2}>
-          <TextField
-            id="first-date"
-            label="První událost"
-            type="date"
-            defaultValue={dateString(new Date())}
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true,
-            }}
+          <Controller
+            name="firstDate"
+            defaultValue=""
+            control={control}
+            render={({ field }) => <TextField
+              label="První událost"
+              type="date"
+              defaultValue={dateString(new Date())}
+              className={classes.textField}
+              InputLabelProps={{ shrink: true }}
+              {...field}
+            />}
           />
         </Grid>
 
         <Grid item container xs={1} spacing={1}>
           <Grid item xs>
-            <TextField id="start-hour" label="hh" placeholder="hh" fullWidth />
+            <Controller
+              name="start.hours"
+              defaultValue=""
+              control={control}
+              render={({ field }) => <TextField label="hh" placeholder="hh" fullWidth {...field} />}
+            />
           </Grid>
           <Grid item xs>
-            <TextField id="start-minute" label="mm" placeholder="mm" fullWidth />
+            <Controller
+              name="start.minutes"
+              defaultValue=""
+              control={control}
+              render={({ field }) => <TextField label="mm" placeholder="mm" fullWidth {...field} />}
+            />
           </Grid>
         </Grid>
 
         <Grid item container xs={1} spacing={1}>
           <Grid item xs>
-            <TextField id="end-hour" label="hh" placeholder="hh" fullWidth />
+            <Controller
+              name="finish.hours"
+              defaultValue=""
+              control={control}
+              render={({ field }) => <TextField label="hh" placeholder="hh" fullWidth {...field} />}
+            />
           </Grid>
           <Grid item xs>
-            <TextField id="end-minute" label="mm" placeholder="mm" fullWidth />
+            <Controller
+              name="finish.minutes"
+              defaultValue=""
+              control={control}
+              render={({ field }) => <TextField label="mm" placeholder="mm" fullWidth {...field} />}
+            />
           </Grid>
         </Grid>
 
         <Grid item xs={2}>
-          <TextField id="weeks-repetition" label="Týdenní opakování" fullWidth />
+          <Controller
+            name="weeksRepetition"
+            defaultValue=""
+            control={control}
+            render={({ field }) => <TextField type="number" label="Týdenní opakování" fullWidth {...field} />}
+          />
         </Grid>
 
         <Grid item xs={2}>
-          <FormControlLabel control={<Switch />} label="Ve svátek" />
+          <Controller
+            name="influencedByHoliday"
+            defaultValue={false}
+            control={control}
+            render={({ field }) => <FormControlLabel control={<Switch />} label="Ve svátek" {...field} />}
+          />
+
         </Grid>
 
         <Grid item xs={1}>
-          <IconButton onClick={() => addRepetition()} color="primary" aria-label="add">
+          <IconButton type="submit" color="primary" aria-label="add">
             <AddIcon />
           </IconButton>
         </Grid>
       </Grid>
-
-      <RepetitionTable repetitions={repetitions} onDelete={deleteRepetition} />
-    </>
+    </form>
   );
 }
 
-function RepetitionTable({ repetitions, onDelete }: { repetitions: RepetitionDto[], onDelete(repetition: RepetitionDto): void }) {
+export function RepetitionTable({ repetitions, onDelete }: { repetitions: CreateRepetitionDto[], onDelete(repetition: CreateRepetitionDto): void }) {
   return (
     <TableContainer>
       <Table size="small">
@@ -144,5 +197,19 @@ function RepetitionTable({ repetitions, onDelete }: { repetitions: RepetitionDto
         </TableBody>
       </Table>
     </TableContainer>
+  )
+}
+
+function DayOfWeekSelect({ field }: { field: ControllerRenderProps }) {
+  return (
+    <TextField label="Den v týdnu" select fullWidth {...field}>
+      <MenuItem value="MONDAY">Pondělí</MenuItem>
+      <MenuItem value="TUESDAY">Úterý</MenuItem>
+      <MenuItem value="WEDNESDAY">Středa</MenuItem>
+      <MenuItem value="THURSDAY">Čtvrtek</MenuItem>
+      <MenuItem value="FRIDAY">Pátek</MenuItem>
+      <MenuItem value="SATURDAY">Sobota</MenuItem>
+      <MenuItem value="SUNDAY">Neděle</MenuItem>
+    </TextField>
   )
 }

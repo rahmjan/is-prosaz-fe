@@ -1,7 +1,6 @@
-import { Button, Grid, MenuItem, TextField, Typography } from "@material-ui/core";
-import { Control, Controller, ControllerRenderProps, SubmitHandler, useForm } from "react-hook-form";
-import { CreateRequestDto, RequestDto } from "../../api/requests";
-import { RepetitionForm } from "./RepetitionForm";
+import { Grid, MenuItem, TextField, Typography } from "@material-ui/core";
+import { Controller, ControllerRenderProps, SubmitHandler, useForm } from "react-hook-form";
+import { CreateRequestDto } from "../../api/requests";
 
 interface IFormInput {
   client: string;
@@ -29,7 +28,7 @@ interface ITime {
   minutes: string;
 }
 
-const mapToRequestDto = (input: IFormInput): Partial<CreateRequestDto> => {
+const mapToRequestDto = (input: IFormInput): CreateRequestDto => {
   return {
     client: Number(input.client),
     activity: input.activity,
@@ -228,10 +227,7 @@ export function RequestForm() {
         <input type="submit" />
       </form >
 
-      <Typography variant="overline">Opakování</Typography>
-      <Grid item>
-        <RepetitionForm />
-      </Grid>
+      
     </Grid >
   );
 }
