@@ -5,13 +5,20 @@ import { CaretakerShortDto, getCaretakers } from "../../api/caretakers";
 import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import {CaretakerDetail} from "../dialogs/CaretakerDetail";
+import EditIcon from "@material-ui/icons/Edit";
+import {CaretakerForm} from "../dialogs/CaretakerForm";
 
 export function Caretakers() {
     const [caretakers, setCaretakers] = useState<CaretakerShortDto[]>([]);
     const [caretakerDetailId, setCaretakerDetailId] = useState<number | null>(null);
+    const [caretakerEditId, setCaretakerEditId] = useState<number | null>(null);
 
     const onCloseDetail = (event: object, reason: string) => {
         setCaretakerDetailId(null);
+    }
+
+    const onCloseEdit = (event: object, reason: string) => {
+        setCaretakerEditId(null)
     }
 
     useEffect(() => {
@@ -56,6 +63,9 @@ export function Caretakers() {
                                         <IconButton onClick = {() => setCaretakerDetailId(c.id)} >
                                             <MoreHorizIcon/>
                                         </IconButton>
+                                        <IconButton onClick={() => setCaretakerEditId(c.id)} >
+                                            <EditIcon/>
+                                        </IconButton>
                                         <IconButton>
                                             <DeleteIcon/>
                                         </IconButton>
@@ -65,8 +75,8 @@ export function Caretakers() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-
                 <CaretakerDetail open={caretakerDetailId !== null} onClose={onCloseDetail} caretakerId={caretakerDetailId}  />
+                <CaretakerForm open={caretakerEditId !== null} onClose={onCloseEdit} caretakerId={caretakerEditId} />
             </Container>
         </>
     )

@@ -1,22 +1,18 @@
 import React, {useEffect, useState} from "react";
-import {getCaretakerById, CaretakerDto} from "../../api/caretakers";
+import {getCaretakerById, CaretakerDto, CaretakerDetailProps} from "../../api/caretakers";
 import {
     Dialog,
     DialogContent,
-    DialogTitle,
+    DialogTitle, Grid,
     IconButton,
     Table,
     TableBody,
     TableCell,
-    TableContainer, TableHead, TableRow, Typography
+    TableContainer, TableHead, TableRow, TextField, Typography
 } from "@material-ui/core";
-
-
-type CaretakerDetailProps = {
-    open: boolean,
-    onClose(event: object, reason: string): void,
-    caretakerId: number | null
-}
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from '@material-ui/icons/Edit';
+import {Controller} from "react-hook-form";
 
 export function CaretakerDetail({ open, onClose, caretakerId }: CaretakerDetailProps  ) {
 
@@ -58,39 +54,128 @@ export function CaretakerDetail({ open, onClose, caretakerId }: CaretakerDetailP
 
     return (
         <Dialog fullWidth maxWidth="lg" open={open} onClose={onClose}>
-            <DialogTitle>Detail pečovatele</DialogTitle>
+            <DialogTitle>Detail pečovatele: {caretaker.name} {caretaker.surname}</DialogTitle>
 
             <DialogContent>
-                <Typography variant="subtitle1" noWrap>{caretaker.name} {caretaker.surname}</Typography>
-                <TableContainer>
-                    <Table size="small">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Údaje</TableCell>
-                                <TableCell>Kontakt</TableCell>
-                                <TableCell>Zaměstnání</TableCell>
-                                <TableCell />
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell>Datum narození: {caretaker.dateOfBirth}</TableCell>
-                                <TableCell>Email: {caretaker.email}</TableCell>
-                                <TableCell>Datum nástupu: {caretaker.dateOfAdmission}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Pohlaví: {caretaker.gender}</TableCell>
-                                <TableCell>Telefon: {caretaker.phoneNumber}</TableCell>
-                                <TableCell>Úvazek: {caretaker.employmentType}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Vzdělání: {caretaker.education}</TableCell>
-                                <TableCell>Nouzový kontakt: {caretaker.emergencyContact}</TableCell>
-                                <TableCell>Úvazek: {caretaker.employmentType}</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+
+                <Grid container direction="row" spacing={4} >
+                    <Grid item xs={6}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell>Osobní údaje</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>{caretaker.id}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Titul</TableCell>
+                                    <TableCell>{caretaker.title}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Jméno</TableCell>
+                                    <TableCell>{caretaker.name} {caretaker.surname}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Pohlaví</TableCell>
+                                    <TableCell>{caretaker.gender}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Datum narození</TableCell>
+                                    <TableCell>{caretaker.dateOfBirth}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell>Adresa</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>Ulice</TableCell>
+                                    <TableCell>{caretaker.address.streetName}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Číslo popisné</TableCell>
+                                    <TableCell>{caretaker.address.orientationNumber}/{caretaker.address.descriptiveNum}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Město</TableCell>
+                                    <TableCell>{caretaker.address.town}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>PSČ</TableCell>
+                                    <TableCell>{caretaker.address.postalCode}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell>Kontakt</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>Telefon</TableCell>
+                                    <TableCell>{caretaker.phoneNumber}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>E-mail</TableCell>
+                                    <TableCell>{caretaker.email}/{caretaker.address.descriptiveNum}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Nouzový kontakt</TableCell>
+                                    <TableCell>{caretaker.emergencyContact}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell>Zaměstnání</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>Datum přijetí</TableCell>
+                                    <TableCell>{caretaker.dateOfAdmission}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Úvazek</TableCell>
+                                    <TableCell>{caretaker.employmentType}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Území</TableCell>
+                                    <TableCell>{caretaker.territory}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Nadřízený</TableCell>
+                                    <TableCell>{caretaker.superior}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </Grid>
+
+                </Grid>
             </DialogContent>
         </Dialog>
     );
