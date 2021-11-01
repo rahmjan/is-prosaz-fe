@@ -42,17 +42,21 @@ const mapToRequestDto = (input: IFormInput): CreateRequestDto => {
   }
 }
 
-export function RequestForm() {
+export function RequestForm({ onSubmit }: { onSubmit(createRequestDto: CreateRequestDto): void }) {
   const { control, handleSubmit } = useForm<IFormInput>();
 
-  const onSubmit: SubmitHandler<IFormInput> = data => {
+  const onSubmitForm: SubmitHandler<IFormInput> = data => {
+    const dto = mapToRequestDto(data);
+
     console.log("form data", data);
-    console.log("DTO", mapToRequestDto(data));
+    console.log("DTO", dto);
+
+    onSubmit(dto);
   };
 
   return (
     <Grid container direction="column" spacing={1}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmitForm)}>
         <Grid item>
           <Controller
             name="client"
@@ -227,7 +231,7 @@ export function RequestForm() {
         <input type="submit" />
       </form >
 
-      
+
     </Grid >
   );
 }

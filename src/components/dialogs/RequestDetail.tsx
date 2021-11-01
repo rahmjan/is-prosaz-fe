@@ -30,7 +30,7 @@ export function RequestDetail({ open, onClose, requestId }: RequestDetailProps) 
       <DialogTitle>Detail požadavku</DialogTitle>
       <DialogContent>
         <Typography variant="subtitle1" noWrap>Údaje</Typography>
-        <RequestForm />
+        <RequestForm onSubmit={() => { }} />
 
         <Typography variant="subtitle1" noWrap>Úkoly</Typography>
 

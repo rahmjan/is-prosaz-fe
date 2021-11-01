@@ -1,8 +1,12 @@
 import { Checkbox, FormControlLabel, Grid, IconButton, makeStyles, MenuItem, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { KeyboardDatePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { Controller, ControllerRenderProps, SubmitHandler, useForm } from "react-hook-form";
 import { CreateRepetitionDto, DayOfWeek } from "../../api/requests";
+import DateFnsUtils from '@date-io/date-fns';
+import { useEffect } from "react";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 const useStyles = makeStyles((theme) => ({
   // container: {
@@ -31,31 +35,28 @@ const dayToString = (day: string) => {
 
 interface IFormInput {
   dayOfWeek: DayOfWeek,
-  firstDate: string,
-  start: ITime,
-  finish: ITime,
+  firstDate?: Date | null,
+  start?: Date | null,
+  finish?: Date | null,
   influencedByHoliday: boolean,
-  weeksRepetition: string
-}
-
-interface ITime {
-  hours: string;
-  minutes: string;
+  weeksRepetition: number
 }
 
 const mapToRepetitionDto = (input: IFormInput): CreateRepetitionDto => {
   return {
     dayOfWeek: input.dayOfWeek,
-    firstDate: new Date(input.firstDate),
+    firstDate: input.firstDate,
     influencedByHoliday: !!input.influencedByHoliday,
-    weeksRepetition: Number(input.weeksRepetition),
-    start: `${input.start.hours}:${input.start.minutes}:00`,
-    finish: `${input.finish.hours}:${input.finish.minutes}:00`
+    weeksRepetition: input.weeksRepetition,
+    start: "",
+    finish: ""
+    // start: input.start ? `${input.start.hours()}:${input.start.minutes()}:00` : "",
+    // finish: input.finish ? `${input.finish.hours()}:${input.finish.minutes()}:00` : ""
   }
 }
 
 export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: CreateRepetitionDto): void }) {
-  const { control, handleSubmit } = useForm<IFormInput>();
+  const { control, handleSubmit, register, getValues, setValue } = useForm<IFormInput>();
 
   const onSubmitForm: SubmitHandler<IFormInput> = data => {
     const dto = mapToRepetitionDto(data);
@@ -70,96 +71,74 @@ export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: Cre
 
   return (
     <form onSubmit={handleSubmit(onSubmitForm)}>
-      <Grid container spacing={1}>
-        <Grid item xs={3}>
-          <Controller
-            name="dayOfWeek"
-            defaultValue=""
-            control={control}
-            render={({ field }) => <DayOfWeekSelect field={field} />}
-          />
-        </Grid>
-
-        <Grid item xs={2}>
-          <Controller
-            name="firstDate"
-            defaultValue=""
-            control={control}
-            render={({ field }) => <TextField
-              label="První událost"
-              type="date"
-              defaultValue={dateString(new Date())}
-              className={classes.textField}
-              InputLabelProps={{ shrink: true }}
-              {...field}
-            />}
-          />
-        </Grid>
-
-        <Grid item container xs={1} spacing={1}>
-          <Grid item xs>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <Grid container spacing={1}>
+          <Grid item xs={2}>
             <Controller
-              name="start.hours"
+              name="dayOfWeek"
               defaultValue=""
               control={control}
-              render={({ field }) => <TextField label="hh" placeholder="hh" fullWidth {...field} />}
+              render={({ field }) => <DayOfWeekSelect field={field} />}
             />
           </Grid>
-          <Grid item xs>
+
+          <Grid item xs={2}>
             <Controller
-              name="start.minutes"
-              defaultValue=""
+              name="start"
               control={control}
-              render={({ field }) => <TextField label="mm" placeholder="mm" fullWidth {...field} />}
+              render={({ field }) => (
+                <DateTimePicker field={field} label="Začátek" format="dd.MM.yyyy HH:mm" variant="inline" />
+              )}
             />
           </Grid>
-        </Grid>
 
-        <Grid item container xs={1} spacing={1}>
-          <Grid item xs>
+          <Grid item xs={2}>
             <Controller
-              name="finish.hours"
-              defaultValue=""
+              name="start"
               control={control}
-              render={({ field }) => <TextField label="hh" placeholder="hh" fullWidth {...field} />}
+              render={({ field }) => (
+                <DateTimePicker field={field} label="Začátek" format="dd.MM.yyyy HH:mm" variant="inline" />
+              )}
             />
           </Grid>
-          <Grid item xs>
+
+          <Grid item xs={2}>
             <Controller
-              name="finish.minutes"
-              defaultValue=""
+              name="finish"
               control={control}
-              render={({ field }) => <TextField label="mm" placeholder="mm" fullWidth {...field} />}
+              render={({ field }) => (
+                <DateTimePicker field={field} label="Konec" format="dd.MM.yyyy HH:mm" variant="inline" />
+              )}
             />
           </Grid>
-        </Grid>
 
-        <Grid item xs={2}>
-          <Controller
-            name="weeksRepetition"
-            defaultValue=""
-            control={control}
-            render={({ field }) => <TextField type="number" label="Týdenní opakování" fullWidth {...field} />}
-          />
-        </Grid>
+          <Grid item xs={2}>
+            <Controller
+              name="weeksRepetition"
+              defaultValue={1}
+              control={control}
+              render={({ field }) => <TextField type="number" label="Týdenní opakování" fullWidth {...field} />}
+            />
+          </Grid>
 
-        <Grid item xs={2}>
-          <Controller
-            name="influencedByHoliday"
-            defaultValue={false}
-            control={control}
-            render={({ field }) => <FormControlLabel control={<Switch />} label="Ve svátek" {...field} />}
-          />
+          <Grid item xs={2}>
+            <Controller
+              name="influencedByHoliday"
+              defaultValue={false}
+              control={control}
+              render={({ field }) => <FormControlLabel control={<Switch />} label="Ve svátek" {...field} />}
+            />
 
-        </Grid>
+          </Grid>
 
-        <Grid item xs={1}>
-          <IconButton type="submit" color="primary" aria-label="add">
-            <AddIcon />
-          </IconButton>
+          <Grid item xs={1}>
+            <IconButton type="submit" color="primary" aria-label="add">
+              <AddIcon />
+            </IconButton>
+          </Grid>
         </Grid>
-      </Grid>
-    </form>
+      </MuiPickersUtilsProvider>
+    </form >
   );
 }
 
@@ -211,5 +190,25 @@ function DayOfWeekSelect({ field }: { field: ControllerRenderProps }) {
       <MenuItem value="SATURDAY">Sobota</MenuItem>
       <MenuItem value="SUNDAY">Neděle</MenuItem>
     </TextField>
+  )
+}
+
+function DateTimePicker({ field: { value, onChange }, ...otherProps }: { field: ControllerRenderProps, [x: string]: any }) {
+  return (
+    <KeyboardDateTimePicker
+      onChange={onChange}
+      value={value}
+      {...otherProps}
+    />
+  )
+}
+
+function DatePicker({ field: { value, onChange }, ...otherProps }: { field: ControllerRenderProps, [x: string]: any }) {
+  return (
+    <KeyboardDatePicker
+      onChange={onChange}
+      value={value}
+      {...otherProps}
+    />
   )
 }
