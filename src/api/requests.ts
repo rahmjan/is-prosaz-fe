@@ -1,4 +1,4 @@
-import { getRequest } from "./api";
+import { getRequest, postRequest } from "./api";
 
 interface RequestDtoBase {
   activity?: string,
@@ -11,14 +11,17 @@ interface RequestDtoBase {
   note?: string,
   numberOfCaretakers?: number,
   requiredGender?: string,
-  territory?: string
+  territory?: string,
 }
 
 export interface RequestDto extends RequestDtoBase {
-  id: number
+  id: number,
+  repetitions?: RepetitionDto[]
 }
 
-export interface CreateRequestDto extends RequestDtoBase { }
+export interface CreateRequestDto extends RequestDtoBase { 
+  repetitions?: CreateRepetitionDto[]
+}
 
 export enum DayOfWeek {
   MONDAY = "MONDAY",
@@ -32,10 +35,10 @@ export enum DayOfWeek {
 
 interface RepetitionDtoBase {
   dayOfWeek: DayOfWeek,
-  start: string,
-  finish: string,
+  start?: Date,
+  finish?: Date,
   influencedByHoliday: boolean,
-  firstDate: Date,
+  firstDate?: Date,
   weeksRepetition: number
 }
 
@@ -47,4 +50,8 @@ export interface CreateRepetitionDto extends RepetitionDtoBase {}
 
 export function getRequests() {
   return getRequest<RequestDto[]>('/request');
+}
+
+export function createRequest(request: CreateRequestDto) {
+  return postRequest<any, CreateRequestDto>('/request', request);
 }

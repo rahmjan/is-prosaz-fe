@@ -1,6 +1,6 @@
-import { Dialog, DialogContent, DialogTitle, Grid, Typography } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@material-ui/core";
 import { useState } from "react";
-import { CreateRepetitionDto, CreateRequestDto } from "../../api/requests";
+import { CreateRepetitionDto, createRequest, CreateRequestDto } from "../../api/requests";
 import { RepetitionForm, RepetitionTable } from "../forms/RepetitionForm";
 import { RequestForm } from "../forms/RequestForm";
 
@@ -15,10 +15,12 @@ export function CreateRequest({ open, onClose }: CreateRequestProps) {
   const addRepetition = (repetition: CreateRepetitionDto) => setRepetitions([...repetitions, repetition]);
   const deleteRepetition = (repetition: CreateRepetitionDto) => setRepetitions(repetitions.filter(r => r !== repetition));
 
-  const submitRequest = (request: CreateRequestDto) => {
+  const submitRequest = async (request: CreateRequestDto) => {
     console.log("final data");
     console.log(request);
     console.log(repetitions);
+
+    await createRequest({...request, repetitions: repetitions});
   }
 
   return (
@@ -39,6 +41,14 @@ export function CreateRequest({ open, onClose }: CreateRequestProps) {
         </Grid>
 
       </DialogContent>
+      <DialogActions>
+        <Button onClick={() => onClose({}, "cancel")} color="primary">
+          Zavřít
+        </Button>
+        <Button type="submit" form="request-form" color="primary">
+          Vytvořit
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }

@@ -1,25 +1,15 @@
-import { Checkbox, FormControlLabel, Grid, IconButton, makeStyles, MenuItem, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@material-ui/core";
+import { Checkbox, FormControlLabel, Grid, IconButton, MenuItem, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { KeyboardDatePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { Controller, ControllerRenderProps, SubmitHandler, useForm } from "react-hook-form";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { Controller, ControllerRenderProps, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { CreateRepetitionDto, DayOfWeek } from "../../api/requests";
 import DateFnsUtils from '@date-io/date-fns';
-import { useEffect } from "react";
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-
-const useStyles = makeStyles((theme) => ({
-  // container: {
-  //   display: 'flex',
-  //   flexWrap: 'wrap',
-  // },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
-}));
-
-const dateString = (date: Date) => date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+import { DatePicker, DateTimePicker } from "./DateTimePickers";
+import { FormDateFormat, FormDateTimeFormat } from "../../utils/constants";
+import { format } from 'date-fns';
+import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const dayToString = (day: string) => {
   switch (day) {
@@ -35,45 +25,50 @@ const dayToString = (day: string) => {
 
 interface IFormInput {
   dayOfWeek: DayOfWeek,
-  firstDate?: Date | null,
-  start?: Date | null,
-  finish?: Date | null,
+  firstDate: Date | null,
+  start: Date | null,
+  finish: Date | null,
   influencedByHoliday: boolean,
   weeksRepetition: number
 }
 
 const mapToRepetitionDto = (input: IFormInput): CreateRepetitionDto => {
   return {
-    dayOfWeek: input.dayOfWeek,
-    firstDate: input.firstDate,
+    dayOfWeek: input.dayOfWeek || undefined,
+    firstDate: input.firstDate || undefined,
     influencedByHoliday: !!input.influencedByHoliday,
-    weeksRepetition: input.weeksRepetition,
-    start: "",
-    finish: ""
-    // start: input.start ? `${input.start.hours()}:${input.start.minutes()}:00` : "",
-    // finish: input.finish ? `${input.finish.hours()}:${input.finish.minutes()}:00` : ""
+    weeksRepetition: Number(input.weeksRepetition),
+    start: input.start || undefined,
+    finish: input.finish || undefined
   }
 }
 
-export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: CreateRepetitionDto): void }) {
-  const { control, handleSubmit, register, getValues, setValue } = useForm<IFormInput>();
+const Repetition = z.object({
+  dayOfWeek: z.nativeEnum(DayOfWeek),
+  firstDate: z.date().nullable(),
+  start: z.date().nullable(),
+  finish: z.date().nullable(),
+  influencedByHoliday: z.boolean(),
+  weeksRepetition: z.number().int().or(z.string())
+})
 
+export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: CreateRepetitionDto): void }) {
+  const { control, handleSubmit } = useForm<IFormInput>({
+    resolver: zodResolver(Repetition),
+    defaultValues: { start: null, finish: null, firstDate: null }
+  });
+
+  const onSubmitError: SubmitErrorHandler<IFormInput> = (errors) => console.log("form errors", errors)
   const onSubmitForm: SubmitHandler<IFormInput> = data => {
     const dto = mapToRepetitionDto(data);
-
-    console.log("form data", data);
-    console.log("DTO", dto);
-
     onSubmit(dto);
   };
 
-  const classes = useStyles();
-
   return (
-    <form onSubmit={handleSubmit(onSubmitForm)}>
+    <form onSubmit={handleSubmit(onSubmitForm, onSubmitError)}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <Grid container spacing={1}>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Controller
               name="dayOfWeek"
               defaultValue=""
@@ -82,37 +77,7 @@ export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: Cre
             />
           </Grid>
 
-          <Grid item xs={2}>
-            <Controller
-              name="start"
-              control={control}
-              render={({ field }) => (
-                <DateTimePicker field={field} label="Začátek" format="dd.MM.yyyy HH:mm" variant="inline" />
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={2}>
-            <Controller
-              name="start"
-              control={control}
-              render={({ field }) => (
-                <DateTimePicker field={field} label="Začátek" format="dd.MM.yyyy HH:mm" variant="inline" />
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={2}>
-            <Controller
-              name="finish"
-              control={control}
-              render={({ field }) => (
-                <DateTimePicker field={field} label="Konec" format="dd.MM.yyyy HH:mm" variant="inline" />
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Controller
               name="weeksRepetition"
               defaultValue={1}
@@ -121,14 +86,43 @@ export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: Cre
             />
           </Grid>
 
-          <Grid item xs={2}>
+          <Grid item xs={6}>
             <Controller
               name="influencedByHoliday"
               defaultValue={false}
               control={control}
-              render={({ field }) => <FormControlLabel control={<Switch />} label="Ve svátek" {...field} />}
+              render={({ field }) => <FormControlLabel control={<Switch />} label="Včetně svátku" {...field} />}
             />
+          </Grid>
 
+          <Grid item xs={3}>
+            <Controller
+              name="firstDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker field={field} label="První událost" format={FormDateFormat} variant="inline" />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={4}>
+            <Controller
+              name="start"
+              control={control}
+              render={({ field }) => (
+                <DateTimePicker field={field} label="Začátek" format={FormDateTimeFormat} variant="inline" />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={4}>
+            <Controller
+              name="finish"
+              control={control}
+              render={({ field }) => (
+                <DateTimePicker field={field} label="Konec" format={FormDateTimeFormat} variant="inline" />
+              )}
+            />
           </Grid>
 
           <Grid item xs={1}>
@@ -161,9 +155,9 @@ export function RepetitionTable({ repetitions, onDelete }: { repetitions: Create
           {repetitions.map((r, index) =>
             <TableRow key={index}>
               <TableCell>{dayToString(r.dayOfWeek)}</TableCell>
-              <TableCell>{r.start}</TableCell>
-              <TableCell>{r.finish}</TableCell>
-              <TableCell>{dateString(r.firstDate)}</TableCell>
+              <TableCell>{r.start ? format(r.start, FormDateTimeFormat) : "Nezadáno"}</TableCell>
+              <TableCell>{r.finish ? format(r.finish, FormDateTimeFormat) : "Nezadáno"}</TableCell>
+              <TableCell>{r.firstDate ? format(r.firstDate, FormDateFormat) : "Nezadáno"}</TableCell>
               <TableCell>{r.weeksRepetition}</TableCell>
               <TableCell><Checkbox checked={r.influencedByHoliday} /></TableCell>
               <TableCell align="right">
@@ -190,25 +184,5 @@ function DayOfWeekSelect({ field }: { field: ControllerRenderProps }) {
       <MenuItem value="SATURDAY">Sobota</MenuItem>
       <MenuItem value="SUNDAY">Neděle</MenuItem>
     </TextField>
-  )
-}
-
-function DateTimePicker({ field: { value, onChange }, ...otherProps }: { field: ControllerRenderProps, [x: string]: any }) {
-  return (
-    <KeyboardDateTimePicker
-      onChange={onChange}
-      value={value}
-      {...otherProps}
-    />
-  )
-}
-
-function DatePicker({ field: { value, onChange }, ...otherProps }: { field: ControllerRenderProps, [x: string]: any }) {
-  return (
-    <KeyboardDatePicker
-      onChange={onChange}
-      value={value}
-      {...otherProps}
-    />
   )
 }
