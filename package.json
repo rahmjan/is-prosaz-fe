@@ -5,30 +5,25 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@reduxjs/toolkit": "^1.6.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.4",
-<<<<<<< HEAD
     "@types/react": "^17.0.33",
-=======
-    "@types/react": "^17.0.31",
->>>>>>> 36165475bf1535d15dede30c620c3248fb08d3e7
     "@types/react-dom": "^17.0.10",
     "axios": "^0.23.0",
     "base-64": "^1.0.0",
     "bcryptjs": "^2.4.3",
-<<<<<<< HEAD
     "devextreme": "^21.1.6",
-=======
->>>>>>> 36165475bf1535d15dede30c620c3248fb08d3e7
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-big-calendar": "^0.38.0",
     "react-calendar": "^3.4.0",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.18.0",
     "react-redux": "^7.2.5",
     "react-router-dom": "^5.3.0",
     "react-scripts": "^4.0.3",
