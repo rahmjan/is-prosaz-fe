@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Container, Box, TextField, Typography, makeStyles, Button, ListItem, List, ListItemText, FormControl, InputLabel, Select, Dialog, DialogTitle, MenuItem } from "@material-ui/core";
-import { AppHeader } from "../menu/AppHeader";
-import { UserDto, findUser } from "../../api/users";
 import DeleteIcon from '@material-ui/icons/Delete';
+import {findUser, UserDto} from './api/users';
+import {AppHeader} from './components/menu/AppHeader';
 
 const roles = ["ADMIN", "COORDINATOR", "SHIFT_LEADER", "CARETAKER"]
 const ITEM_HEIGHT = 48;
@@ -95,7 +95,6 @@ export function UserEdit() {
           <FormControl style={{width: 500}}>
             <InputLabel >Přidat roli</InputLabel>
             <Select
-
               value={newRole}
               onChange={handleChange}
             >

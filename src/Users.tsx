@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button, ButtonGroup, makeStyles, Dialog, DialogActions, DialogTitle, DialogContentText } from "@material-ui/core";
-import { AppHeader } from "../menu/AppHeader";
-import { UserDto, getUsers } from "../../api/users";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
 import { Link } from "react-router-dom";
+import {getUsers, UserDto} from './api/users';
+import {AppHeader} from './components/menu/AppHeader';
 
 const useStyle = makeStyles({
   table: {
