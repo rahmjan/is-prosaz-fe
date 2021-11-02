@@ -13,7 +13,6 @@ import {
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from '@material-ui/icons/Edit';
 import {Controller} from "react-hook-form";
-import {genderToText, employmentTypeToText} from "../../utils/translations";
 
 export function CaretakerDetail({ open, onClose, caretakerId }: CaretakerDetailProps  ) {
 
