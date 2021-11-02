@@ -4,6 +4,7 @@ import { Requests } from "../pages/Requests";
 import { Dailyplan } from "../pages/Dailyplan";
 import { Home } from "../pages/Home";
 import { Login } from "../pages/Login";
+import { Caretakers } from "../pages/Caretakers";
 import { Tasks } from "../pages/Tasks";
 
 interface PageItemI {
@@ -44,7 +45,7 @@ export const pageItems: PageItemI[] = [
   {
     label: "Pečovatelé",
     showInMenu: true,
-    render: <div/>,
+    render: <Caretakers/>,
     hasRole: ["ADMIN", "COORDINATOR", "SHIFT_LEADER"],
     link: PAGE.CARETAKERS,
   },
