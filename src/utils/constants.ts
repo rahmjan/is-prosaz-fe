@@ -22,3 +22,7 @@ export enum PAGE {
 
 export type EmploymentType = "PLNY" | "POLOVICNI" | "TRICTYRY" | "JEDNACTYRI" | "DPP" | "DPC";
 export type Gender = "MALE" | "FEMALE";
+
+export const FormDateFormat = "dd.MM.yyyy";
+export const FormTimeFormat = "HH:mm";
+export const FormDateTimeFormat = `${FormDateFormat} ${FormTimeFormat}`;
