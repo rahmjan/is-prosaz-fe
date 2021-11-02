@@ -6,8 +6,6 @@ interface RequestDtoBase {
   duration?: string,
   earliestStart?: string,
   latestEnd?: string,
-  startPlace?: number,
-  endPlace?: number,
   note?: string,
   numberOfCaretakers?: number,
   requiredGender?: string,
@@ -16,11 +14,15 @@ interface RequestDtoBase {
 
 export interface RequestDto extends RequestDtoBase {
   id: number,
-  repetitions?: RepetitionDto[]
+  repetitions?: RepetitionDto[],
+  startPlace?: PlaceDto,
+  endPlace?: PlaceDto
 }
 
 export interface CreateRequestDto extends RequestDtoBase { 
-  repetitions?: CreateRepetitionDto[]
+  repetitions?: CreateRepetitionDto[],
+  startPlace?: CreatePlaceDto,
+  endPlace?: CreatePlaceDto
 }
 
 export enum DayOfWeek {
@@ -47,6 +49,20 @@ export interface RepetitionDto extends RepetitionDtoBase {
 }
 
 export interface CreateRepetitionDto extends RepetitionDtoBase {}
+
+interface PlaceDtoBase {
+  town: string,
+  streetName: string,
+  descriptiveNum: string,
+  orientationNumber: string,
+  postalCode: string
+}
+
+export interface PlaceDto extends PlaceDtoBase {
+  id: number
+}
+
+export interface CreatePlaceDto extends PlaceDtoBase {}
 
 export function getRequests() {
   return getRequest<RequestDto[]>('/request');

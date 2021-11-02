@@ -1,5 +1,4 @@
-import { Checkbox, FormControlLabel, Grid, IconButton, MenuItem, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
+import { Box, Button, Checkbox, FormControlLabel, Grid, IconButton, MenuItem, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { Controller, ControllerRenderProps, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
@@ -86,6 +85,36 @@ export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: Cre
             />
           </Grid>
 
+          <Grid item xs={3}>
+            <Controller
+              name="start"
+              control={control}
+              render={({ field }) => (
+                <DateTimePicker fullWidth field={field} label="Začátek" format={FormDateTimeFormat} ampm={false} variant="inline" />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={3}>
+            <Controller
+              name="finish"
+              control={control}
+              render={({ field }) => (
+                <DateTimePicker fullWidth field={field} label="Konec" format={FormDateTimeFormat} ampm={false} variant="inline" />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={3}>
+            <Controller
+              name="firstDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker fullWidth field={field} label="První událost" format={FormDateFormat} ampm={false} variant="inline" />
+              )}
+            />
+          </Grid>
+
           <Grid item xs={6}>
             <Controller
               name="influencedByHoliday"
@@ -96,39 +125,11 @@ export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: Cre
           </Grid>
 
           <Grid item xs={3}>
-            <Controller
-              name="firstDate"
-              control={control}
-              render={({ field }) => (
-                <DatePicker field={field} label="První událost" format={FormDateFormat} variant="inline" />
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={4}>
-            <Controller
-              name="start"
-              control={control}
-              render={({ field }) => (
-                <DateTimePicker field={field} label="Začátek" format={FormDateTimeFormat} variant="inline" />
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={4}>
-            <Controller
-              name="finish"
-              control={control}
-              render={({ field }) => (
-                <DateTimePicker field={field} label="Konec" format={FormDateTimeFormat} variant="inline" />
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={1}>
-            <IconButton type="submit" color="primary" aria-label="add">
+            {/* <IconButton type="submit" color="primary" aria-label="add">
               <AddIcon />
-            </IconButton>
+            </IconButton> */}
+
+            <Box textAlign="right"><Button type="submit" variant="contained" color="primary">Přidat opakování</Button></Box>
           </Grid>
         </Grid>
       </MuiPickersUtilsProvider>

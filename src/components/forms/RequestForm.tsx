@@ -1,12 +1,12 @@
-import { Grid, MenuItem, TextField, Typography } from "@material-ui/core";
+import { FormControlLabel, Grid, MenuItem, Switch, TextField, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { Controller, ControllerRenderProps, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
-import { CreateRequestDto } from "../../api/requests";
+import { CreatePlaceDto, CreateRequestDto } from "../../api/requests";
 import DateFnsUtils from '@date-io/date-fns';
 import { TimePicker } from "./DateTimePickers";
 import { format } from 'date-fns';
 import { ClientOption, ClientPicker } from "./ClientPicker";
-import { useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { zeroPad } from "../../utils/formating";
@@ -22,6 +22,7 @@ interface IFormInput {
   caretakerCount: number | null;
   preferredGender: string;
   startAddress: IAddress;
+  endAddress: IAddress | null;
   territory: string;
 }
 
@@ -44,11 +45,11 @@ const Time = z.object({
 });
 
 const Address = z.object({
-  streetName: z.string(),
-  descriptiveNumber: z.string(),
-  orientationNumber: z.string(),
-  town: z.string(),
-  postalCode: z.string()
+  streetName: z.string().min(1),
+  descriptiveNumber: z.string().min(1),
+  orientationNumber: z.string().min(1),
+  town: z.string().min(1),
+  postalCode: z.string().min(1)
 });
 
 const Request = z.object({
@@ -61,6 +62,7 @@ const Request = z.object({
   caretakerCount: z.number().int().nullish().or(z.string()),
   preferredGender: z.enum(["", "MALE", "FEMALE"]).nullable(),
   startAddress: Address,
+  endAddress: Address.nullish(),
   territory: z.enum(["LEVY", "PRAVY"])
 });
 
@@ -74,12 +76,24 @@ const mapToRequestDto = (input: IFormInput): CreateRequestDto => {
     latestEnd: input.endTime ? format(input.endTime, "HH:mm:00") : undefined,
     territory: input.territory,
     numberOfCaretakers: input.caretakerCount ? Number(input.caretakerCount) : undefined,
-    requiredGender: input.preferredGender || undefined
+    requiredGender: input.preferredGender || undefined,
+    startPlace: input.startAddress ? mapAddressToPlaceDto(input.startAddress) : undefined,
+    endPlace: input.endAddress ? mapAddressToPlaceDto(input.endAddress) : undefined
+  }
+}
+
+const mapAddressToPlaceDto = (input: IAddress): CreatePlaceDto => {
+  return {
+    streetName: input.streetName,
+    descriptiveNum: input.descriptiveNumber,
+    orientationNumber: input.orientationNumber,
+    town: input.town,
+    postalCode: input.postalCode
   }
 }
 
 export function RequestForm({ onSubmit }: { onSubmit(createRequestDto: CreateRequestDto): void }) {
-  const { control, handleSubmit, register, setValue } = useForm<IFormInput>({
+  const { control, handleSubmit, register, unregister, setValue } = useForm<IFormInput>({
     resolver: zodResolver(Request),
     defaultValues: {
       client: null,
@@ -89,13 +103,25 @@ export function RequestForm({ onSubmit }: { onSubmit(createRequestDto: CreateReq
     }
   });
 
+  const [sameEndAddress, setSameEndAddress] = useState<boolean>(true);
+
   const onSubmitError: SubmitErrorHandler<IFormInput> = (errors) => console.log("form errors", errors)
   const onSubmitForm: SubmitHandler<IFormInput> = data => {
+    console.log("request data", data);
+
     const dto = mapToRequestDto(data);
     onSubmit(dto);
   };
 
   const handleClientChange = (event: object, value: ClientOption | null, reason: string) => setValue("client", value?.id || null, { shouldValidate: true, shouldDirty: true })
+  const onSameEndAddressChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    if (checked) {
+      setValue("endAddress", null);
+      unregister("endAddress", { keepDefaultValue: true });
+    }
+
+    setSameEndAddress(checked);
+  }
 
   useEffect(() => {
     register("client", { required: true });
@@ -107,7 +133,6 @@ export function RequestForm({ onSubmit }: { onSubmit(createRequestDto: CreateReq
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid item>
             <ClientPicker label="Klient" onChange={handleClientChange} fullWidth />
-
           </Grid>
 
           <Grid item>
@@ -130,42 +155,44 @@ export function RequestForm({ onSubmit }: { onSubmit(createRequestDto: CreateReq
 
           <Grid item>
             <Typography variant="overline">Doba trvání</Typography>
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
-                <Controller
-                  name="duration.hours"
-                  defaultValue={0}
-                  control={control}
-                  render={({ field }) => <TextField label="Hodiny" type="number" fullWidth {...field} />}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  name="duration.minutes"
-                  defaultValue={0}
-                  control={control}
-                  render={({ field }) => <TextField label="Minuty" type="number" fullWidth {...field} />}
-                />
-              </Grid>
-            </Grid>
           </Grid>
 
-          <Grid item container>
-            <Grid item xs={6}>
+          <Grid item container spacing={1}>
+            <Grid item xs={4}>
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <Controller
+                    name="duration.hours"
+                    defaultValue={0}
+                    control={control}
+                    render={({ field }) => <TextField label="Hodiny" type="number" fullWidth {...field} />}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Controller
+                    name="duration.minutes"
+                    defaultValue={0}
+                    control={control}
+                    render={({ field }) => <TextField label="Minuty" type="number" fullWidth {...field} />}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={4}>
               <Controller
                 name="startTime"
                 control={control}
                 render={({ field }) => (
-                  <TimePicker ampm={false} field={field} label="Nejdřívější čas začátku" format="HH:mm" variant="inline" />
+                  <TimePicker fullWidth ampm={false} field={field} label="Nejdřívější čas začátku" format="HH:mm" variant="inline" />
                 )}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <Controller
                 name="endTime"
                 control={control}
                 render={({ field }) => (
-                  <TimePicker ampm={false} field={field} label="Nejpozdější čas konce" format="HH:mm" variant="inline" />
+                  <TimePicker fullWidth ampm={false} field={field} label="Nejpozdější čas konce" format="HH:mm" variant="inline" />
                 )}
               />
             </Grid>
@@ -188,6 +215,15 @@ export function RequestForm({ onSubmit }: { onSubmit(createRequestDto: CreateReq
                 />
               </Grid>
             </Grid>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Controller
+              name="territory"
+              defaultValue=""
+              control={control}
+              render={({ field }) => <TerritorySelect field={field} />}
+            />
           </Grid>
 
           <Grid item>
@@ -238,19 +274,64 @@ export function RequestForm({ onSubmit }: { onSubmit(createRequestDto: CreateReq
             </Grid>
           </Grid>
 
-          <Grid item xs={6}>
-            <Controller
-              name="territory"
-              defaultValue=""
-              control={control}
-              render={({ field }) => <TerritorySelect field={field} />}
-            />
-          </Grid>
+          <Grid item>
+            <Typography variant="overline">Místo konce</Typography>
 
+
+            <Grid item>
+              <FormControlLabel control={<Switch checked={sameEndAddress} onChange={onSameEndAddressChange} />} label="Stejné jako místo začátku" />
+            </Grid>
+
+            {!sameEndAddress &&
+              <>
+                <Grid container item spacing={1}>
+                  <Grid item xs={8}>
+                    <Controller
+                      name="endAddress.streetName"
+                      defaultValue=""
+                      control={control}
+                      render={({ field }) => <TextField label="Ulice" fullWidth {...field} />}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Controller
+                      name="endAddress.descriptiveNumber"
+                      defaultValue=""
+                      control={control}
+                      render={({ field }) => <TextField label="č. p." fullWidth {...field} />}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Controller
+                      name="endAddress.orientationNumber"
+                      defaultValue=""
+                      control={control}
+                      render={({ field }) => <TextField label="č. o." fullWidth {...field} />}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={8}>
+                    <Controller
+                      name="endAddress.town"
+                      defaultValue=""
+                      control={control}
+                      render={({ field }) => <TextField label="Město" fullWidth {...field} />}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Controller
+                      name="endAddress.postalCode"
+                      defaultValue=""
+                      control={control}
+                      render={({ field }) => <TextField label="PSČ" fullWidth {...field} />}
+                    />
+                  </Grid>
+                </Grid>
+              </>}
+          </Grid>
         </MuiPickersUtilsProvider>
       </form >
-
-
     </Grid >
   );
 }

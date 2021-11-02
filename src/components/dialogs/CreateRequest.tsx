@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, Typography } from "@material-ui/core";
 import { useState } from "react";
 import { CreateRepetitionDto, createRequest, CreateRequestDto } from "../../api/requests";
 import { RepetitionForm, RepetitionTable } from "../forms/RepetitionForm";
@@ -20,7 +20,7 @@ export function CreateRequest({ open, onClose }: CreateRequestProps) {
     console.log(request);
     console.log(repetitions);
 
-    await createRequest({...request, repetitions: repetitions});
+    await createRequest({ ...request, repetitions: repetitions });
   }
 
   return (
@@ -32,11 +32,21 @@ export function CreateRequest({ open, onClose }: CreateRequestProps) {
             <RequestForm onSubmit={submitRequest} />
           </Grid>
           <Grid item>
-            <Typography variant="overline">Opakování</Typography>
+            <Divider />
+          </Grid>
+          <Grid item container spacing={1}>
 
-            <RepetitionForm onSubmit={addRepetition} />
+            <Grid item xs={12}>
+              <Typography variant="overline">Opakování</Typography>
+            </Grid>
 
-            <RepetitionTable repetitions={repetitions} onDelete={deleteRepetition} />
+            <Grid item xs={12}>
+              <RepetitionForm onSubmit={addRepetition} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <RepetitionTable repetitions={repetitions} onDelete={deleteRepetition} />
+            </Grid>
           </Grid>
         </Grid>
 
