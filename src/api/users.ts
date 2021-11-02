@@ -13,5 +13,5 @@ export function findUser(id: number) {
 }
 
 export function getUsers() {
-    return getRequest<UserDto[]>('/users/');
+  return getRequest<UserDto[]>('/users/');
 }
