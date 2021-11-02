@@ -6,15 +6,10 @@ export interface TaskDto {
   duration: string
 }
 
-export interface RepetitionDto {
-  dayOfWeek: string,
-  start: string,
-  finish: string,
-  influencedByHoliday: boolean,
-  firstDate: Date,
-  weeksRepetition: number
-}
-
 export function getTasksForRequest(requestId: number) {
   return getRequest<TaskDto[]>(`/task?requestId=${requestId}`);
+}
+
+export function getTasks() {
+  return getRequest<TaskDto[]>("/task");
 }

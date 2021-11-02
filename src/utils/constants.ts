@@ -14,6 +14,7 @@ export enum PAGE {
     CARETAKERS = "/caretakers",
     USERS = "/users",
     REQUESTS = "/requests",
+    TASKS = "/tasks",
     DAILYPLAN = "/dailyplan",
     MONTHLYPLAN = "/monthlyplan",
     AGENDA = "/agenda",
