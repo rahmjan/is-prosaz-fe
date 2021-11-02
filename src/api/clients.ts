@@ -7,6 +7,13 @@ export interface ClientShortDto extends PersonShortDto {
   newClient: boolean,
 }
 
-export function getClients() {
-  return getRequest<ClientShortDto[]>('/clients/short');
+interface GetClientsParams {
+  firstname?: string,
+  lastname?: string;
+  active?: boolean;
+  territory?: string; 
+}
+
+export function getClients(params?: GetClientsParams) {
+  return getRequest<ClientShortDto[]>('/clients/short', params);
 }

@@ -1,5 +1,6 @@
 import { PAGE, ROLE } from "../../utils/constants";
 import { Clients } from "../pages/Clients";
+import { Requests } from "../pages/Requests";
 import { Dailyplan } from "../pages/Dailyplan";
 import { Home } from "../pages/Home";
 import { Login } from "../pages/Login";
@@ -56,7 +57,7 @@ export const pageItems: PageItemI[] = [
   {
     label: "Požadavky klientů",
     showInMenu: true,
-    render: <div/>,
+    render: <Requests/>,
     hasRole: ["ADMIN", "COORDINATOR"],
     link: PAGE.REQUESTS,
   },
