@@ -40,7 +40,7 @@ interface RepetitionDtoBase {
   start?: Date,
   finish?: Date,
   influencedByHoliday: boolean,
-  firstDate?: Date,
+  // firstDate?: Date,
   weeksRepetition: number
 }
 

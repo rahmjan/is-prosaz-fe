@@ -41,9 +41,8 @@ export function CreateRequest({ open, onClose }: CreateRequestProps) {
             <Divider />
           </Grid>
           <Grid item container spacing={1}>
-
             <Grid item xs={12}>
-              <Typography variant="overline">Opakování</Typography>
+              <Typography variant="subtitle1">Opakování</Typography>
             </Grid>
 
             <Grid item xs={12}>

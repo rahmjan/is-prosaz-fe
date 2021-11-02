@@ -1,5 +1,6 @@
 import { Box, Button, Checkbox, FormControlLabel, Grid, IconButton, MenuItem, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { Controller, ControllerRenderProps, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { CreateRepetitionDto, DayOfWeek } from "../../api/requests";
@@ -34,7 +35,7 @@ interface IFormInput {
 const mapToRepetitionDto = (input: IFormInput): CreateRepetitionDto => {
   return {
     dayOfWeek: input.dayOfWeek || undefined,
-    firstDate: input.firstDate || undefined,
+    // firstDate: input.firstDate || undefined,
     influencedByHoliday: !input.influencedByHoliday, // WARNING: this is inversed in API compared to the frontend
     weeksRepetition: Number(input.weeksRepetition),
     start: input.start || undefined,
@@ -44,7 +45,7 @@ const mapToRepetitionDto = (input: IFormInput): CreateRepetitionDto => {
 
 const Repetition = z.object({
   dayOfWeek: z.nativeEnum(DayOfWeek),
-  firstDate: z.date().nullable(),
+  // firstDate: z.date().nullable(),
   start: z.date().nullable(),
   finish: z.date().nullable(),
   influencedByHoliday: z.boolean(),
@@ -67,7 +68,7 @@ export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: Cre
     <form onSubmit={handleSubmit(onSubmitForm, onSubmitError)}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <Grid container spacing={1}>
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Controller
               name="dayOfWeek"
               defaultValue=""
@@ -76,36 +77,47 @@ export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: Cre
             />
           </Grid>
 
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Controller
               name="weeksRepetition"
               defaultValue={1}
               control={control}
-              render={({ field }) => <TextField type="number" label="Týdenní opakování" fullWidth {...field} />}
+              render={({ field }) => <TextField type="number" label="Četnost" fullWidth {...field} />}
             />
           </Grid>
 
-          <Grid item xs={3}>
+          <Grid item xs={4} container>
+            <Grid container justifyContent="center">
+              <Controller
+                name="influencedByHoliday"
+                defaultValue={false}
+                control={control}
+                render={({ field }) => <FormControlLabel control={<Switch />} label="Včetně svátku" {...field} />}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid item xs={4}>
             <Controller
               name="start"
               control={control}
               render={({ field }) => (
-                <DateTimePicker fullWidth field={field} label="Začátek" format={FormDateTimeFormat} ampm={false} variant="inline" />
+                <DatePicker fullWidth field={field} label="Začátek" format={FormDateFormat} ampm={false} variant="inline" />
               )}
             />
           </Grid>
 
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Controller
               name="finish"
               control={control}
               render={({ field }) => (
-                <DateTimePicker fullWidth field={field} label="Konec" format={FormDateTimeFormat} ampm={false} variant="inline" />
+                <DatePicker fullWidth field={field} label="Konec" format={FormDateFormat} ampm={false} variant="inline" />
               )}
             />
           </Grid>
 
-          <Grid item xs={3}>
+          {/* <Grid item xs={3}>
             <Controller
               name="firstDate"
               control={control}
@@ -113,18 +125,9 @@ export function RepetitionForm({ onSubmit }: { onSubmit(createRepetitionDto: Cre
                 <DatePicker fullWidth field={field} label="První událost" format={FormDateFormat} ampm={false} variant="inline" />
               )}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={6}>
-            <Controller
-              name="influencedByHoliday"
-              defaultValue={false}
-              control={control}
-              render={({ field }) => <FormControlLabel control={<Switch />} label="Včetně svátku" {...field} />}
-            />
-          </Grid>
-
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             {/* <IconButton type="submit" color="primary" aria-label="add">
               <AddIcon />
             </IconButton> */}
@@ -147,7 +150,7 @@ export function RepetitionTable({ repetitions, onDelete }: { repetitions: Create
             <TableCell>Začátek</TableCell>
             <TableCell>Konec</TableCell>
             <TableCell>První událost</TableCell>
-            <TableCell>Týdenní opakování</TableCell>
+            {/* <TableCell>Týdenní opakování</TableCell> */}
             <TableCell>Ve svátek</TableCell>
             <TableCell />
           </TableRow>
@@ -158,9 +161,9 @@ export function RepetitionTable({ repetitions, onDelete }: { repetitions: Create
               <TableCell>{dayToString(r.dayOfWeek)}</TableCell>
               <TableCell>{r.start ? format(r.start, FormDateTimeFormat) : "Nezadáno"}</TableCell>
               <TableCell>{r.finish ? format(r.finish, FormDateTimeFormat) : "Nezadáno"}</TableCell>
-              <TableCell>{r.firstDate ? format(r.firstDate, FormDateFormat) : "Nezadáno"}</TableCell>
+              {/* <TableCell>{r.firstDate ? format(r.firstDate, FormDateFormat) : "Nezadáno"}</TableCell> */}
               <TableCell>{r.weeksRepetition}</TableCell>
-              <TableCell><Checkbox checked={r.influencedByHoliday} /></TableCell>
+              <TableCell><Checkbox checked={!r.influencedByHoliday} /></TableCell>
               <TableCell align="right">
                 <IconButton onClick={() => onDelete(r)}>
                   <DeleteIcon />
