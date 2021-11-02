@@ -19,7 +19,6 @@ export enum PAGE {
     DAILYPLAN = "/dailyplan",
     MONTHLYPLAN = "/monthlyplan",
     AGENDA = "/agenda",
-    USEREDIT = "/useredit"
 }
 
 export type EmploymentType = "PLNY" | "POLOVICNI" | "TRICTYRY" | "JEDNACTYRI" | "DPP" | "DPC";
