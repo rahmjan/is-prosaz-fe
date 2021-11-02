@@ -13,6 +13,7 @@ export enum PAGE {
     CLIENTS = "/clients", 
     CARETAKERS = "/caretakers",
     USERS = "/users",
+    USEREDIT = "/useredit",
     REQUESTS = "/requests",
     TASKS = "/tasks",
     DAILYPLAN = "/dailyplan",
