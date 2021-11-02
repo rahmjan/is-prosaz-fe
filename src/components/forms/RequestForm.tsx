@@ -59,7 +59,7 @@ const Request = z.object({
   duration: Time,
   startTime: z.date().nullable(),
   endTime: z.date().nullable(),
-  caretakerCount: z.number().int().nullish().or(z.string()),
+  caretakerCount: z.number().int().nonnegative().nullish().or(z.string()),
   preferredGender: z.enum(["", "MALE", "FEMALE"]).nullable(),
   startAddress: Address,
   endAddress: Address.nullish(),

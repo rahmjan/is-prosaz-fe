@@ -35,7 +35,7 @@ const mapToRepetitionDto = (input: IFormInput): CreateRepetitionDto => {
   return {
     dayOfWeek: input.dayOfWeek || undefined,
     firstDate: input.firstDate || undefined,
-    influencedByHoliday: !!input.influencedByHoliday,
+    influencedByHoliday: !input.influencedByHoliday, // WARNING: this is inversed in API compared to the frontend
     weeksRepetition: Number(input.weeksRepetition),
     start: input.start || undefined,
     finish: input.finish || undefined

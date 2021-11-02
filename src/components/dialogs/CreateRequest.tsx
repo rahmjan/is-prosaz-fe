@@ -20,7 +20,13 @@ export function CreateRequest({ open, onClose }: CreateRequestProps) {
     console.log(request);
     console.log(repetitions);
 
-    await createRequest({ ...request, repetitions: repetitions });
+    try {
+      await createRequest({ ...request, repetitions: repetitions });
+
+      onClose({}, "create");
+    } catch {
+      
+    }
   }
 
   return (

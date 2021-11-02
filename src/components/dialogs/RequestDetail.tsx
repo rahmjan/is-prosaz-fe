@@ -3,7 +3,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useEffect, useState } from "react";
 import { getTasksForRequest, TaskDto } from "../../api/tasks";
-import { RequestForm } from "../forms/RequestForm";
+// import { RequestForm } from "../forms/RequestForm";
 
 type RequestDetailProps = {
   open: boolean,
@@ -29,8 +29,8 @@ export function RequestDetail({ open, onClose, requestId }: RequestDetailProps) 
     <Dialog fullWidth maxWidth="lg" open={open} onClose={onClose}>
       <DialogTitle>Detail požadavku</DialogTitle>
       <DialogContent>
-        <Typography variant="subtitle1" noWrap>Údaje</Typography>
-        <RequestForm onSubmit={() => { }} />
+        {/* <Typography variant="subtitle1" noWrap>Údaje</Typography> */}
+        {/* <RequestForm onSubmit={() => { }} /> */}
 
         <Typography variant="subtitle1" noWrap>Úkoly</Typography>
 
