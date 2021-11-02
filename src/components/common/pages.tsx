@@ -1,6 +1,8 @@
 import { PAGE, ROLE } from "../../utils/constants";
 import { Clients } from "../pages/Clients";
 import { Requests } from "../pages/Requests";
+import { Users } from "../pages/Users";
+import { UserEdit } from "../pages/UserEdit";
 import { Dailyplan } from "../pages/Dailyplan";
 import { Home } from "../pages/Home";
 import { Login } from "../pages/Login";
@@ -51,9 +53,16 @@ export const pageItems: PageItemI[] = [
   {
     label: "Uživatelé",
     showInMenu: true,
-    render: <div/>,
+    render: <Users/>,
     hasRole: ["ADMIN"],
     link: PAGE.USERS,
+  },
+  {
+    label: "Nastavení účtu",
+    showInMenu: false,
+    render: <UserEdit/>,
+    hasRole: ["ADMIN"],
+    link: PAGE.USEREDIT,
   },
   {
     label: "Požadavky klientů",
