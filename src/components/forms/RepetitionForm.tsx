@@ -159,8 +159,8 @@ export function RepetitionTable({ repetitions, onDelete }: { repetitions: Create
           {repetitions.map((r, index) =>
             <TableRow key={index}>
               <TableCell>{dayToString(r.dayOfWeek)}</TableCell>
-              <TableCell>{r.start ? format(r.start, FormDateTimeFormat) : "Nezadáno"}</TableCell>
-              <TableCell>{r.finish ? format(r.finish, FormDateTimeFormat) : "Nezadáno"}</TableCell>
+              <TableCell>{r.start ? format(r.start, FormDateFormat) : "Nezadáno"}</TableCell>
+              <TableCell>{r.finish ? format(r.finish, FormDateFormat) : "Nezadáno"}</TableCell>
               {/* <TableCell>{r.firstDate ? format(r.firstDate, FormDateFormat) : "Nezadáno"}</TableCell> */}
               <TableCell>{r.weeksRepetition}</TableCell>
               <TableCell><Checkbox checked={!r.influencedByHoliday} /></TableCell>
